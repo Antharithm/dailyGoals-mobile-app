@@ -1,41 +1,74 @@
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  ScrollView,
+  FlatList, // only renders what is on screen - keeps app fast
+} from "react-native";
 
 export default function App() {
+  const [enteredGoalText, setEnteredGoalText] = useState("");
+  const [courseGoals, setCourseGoals] = useState([]);
+
+  function goalInputHandler(enteredText) {
+    setEnteredGoalText(enteredText);
+  }
+
+  function addGoalHandler() {
+    setCourseGoals((currentCourseGoals) => [
+      ...currentCourseGoals,
+      { text: enteredGoalText, id: Math.random().toString() }, // generates random keys for items a list
+    ]);
+  }
+
   return (
-    // outter box
     <View style={styles.appContainer}>
-      {/* input field */}
       <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} placeholder="Your course goal!" />
-        <Button title="Add Goal" />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Your course goal!"
+          onChangeText={goalInputHandler}
+        />
+        <Button title="Add Goal" onPress={addGoalHandler} />
       </View>
-      {/* // goal list box */}
       <View style={styles.goalsContainer}>
-        <Text>List of goals...</Text>
+        <FlatList
+          data={courseGoals}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles.goalItem}>
+                <Text style={styles.goalText}>{itemData.item.text}</Text>
+              </View>
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
+          alwaysBounceVertical={true}
+        />
       </View>
     </View>
   );
 }
 
-// Import stylesheet for auto completion
 const styles = StyleSheet.create({
-  // outter box
   appContainer: {
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 16,
   },
-  // input field box
   inputContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    margingBottom: 24,
+    marginBottom: 24,
     borderBottomWidth: 1,
     borderBottomColor: "#cccccc",
   },
-  // text field box
   textInput: {
     borderWidth: 1,
     borderColor: "#cccccc",
@@ -43,8 +76,16 @@ const styles = StyleSheet.create({
     marginRight: 8,
     padding: 8,
   },
-  // goals box
   goalsContainer: {
     flex: 5,
+  },
+  goalItem: {
+    margin: 8,
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: "#5e0acc",
+  },
+  goalText: {
+    color: "white",
   },
 });
