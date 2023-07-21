@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View, FlatList, Button } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import * as Haptics from "expo-haptics";
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
@@ -10,14 +11,18 @@ export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
 
   function startAddGoalHandler() {
+    // Haptic feedback when a user clicks on "Add New Goal"
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     setModalIsVisible(true);
   }
 
   function endAddGoalHandler() {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setModalIsVisible(false);
   }
 
   function addGoalHandler(enteredGoalText) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
       { text: enteredGoalText, id: Math.random().toString() },
@@ -26,6 +31,7 @@ export default function App() {
   }
 
   function deleteGoalHandler(id) {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setCourseGoals((currentCourseGoals) => {
       return currentCourseGoals.filter((goal) => goal.id !== id);
     });
@@ -39,6 +45,7 @@ export default function App() {
           title="Add New Goal"
           color="#a065ec"
           onPress={startAddGoalHandler}
+          // onPressed={() => Haptics.selectionAsync()}
         />
         <GoalInput
           visible={modalIsVisible}
