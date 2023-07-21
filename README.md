@@ -1,4 +1,4 @@
-# Set Goal Mobile App
+# Set Goals | Mobile App
 
 Technologies used:
 - React Native
